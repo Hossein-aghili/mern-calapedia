@@ -106,22 +106,22 @@ export const checkPassword = catchAsync(async (req, res, next) => {
 
 })
 export const forgetPasseord = catchAsync(async (req, res, next) => {
-    const {phoneNumber=null,code=null,password=null} = req.body
-    if(!phoneNumber || !code || !password){
-        return next(new HandleERROR("اطلاعات وارد شده معتبر نیست",400))
+    const { phoneNumber = null, code = null, password = null } = req.body
+    if (!phoneNumber || !code || !password) {
+        return next(new HandleERROR("اطلاعات وارد شده معتبر نیست", 400))
     }
-    const verifyCode = await verifyCode(phoneNumber,code)
-    if(!verifyCode.success){
-        return next(new HandleERROR("کد وارد شده معتبر نیست",400))
+    const verifyCode = await verifyCode(phoneNumber, code)
+    if (!verifyCode.success) {
+        return next(new HandleERROR("کد وارد شده معتبر نیست", 400))
     }
     const regexPass = new RegExp(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$/);
-    if(!regexPass.test(password)){
-        return next(new HandleERROR("رمز عبور باید حداقل 8 کاراکتر و شامل حروف بزرگ و کوچک و اعداد باشد",400))
+    if (!regexPass.test(password)) {
+        return next(new HandleERROR("رمز عبور باید حداقل 8 کاراکتر و شامل حروف بزرگ و کوچک و اعداد باشد", 400))
     }
-    const hashpassword = bcryptjs.hashSync(password,10)
-    const user = await User.findOneAndUpdate({phoneNumber},{password:hashpassword})
-    if(!user){
-        return next(new HandleERROR("کاربری با این شماره تلفن همراه یافت نشد",404))
+    const hashpassword = bcryptjs.hashSync(password, 10)
+    const user = await User.findOneAndUpdate({ phoneNumber }, { password: hashpassword })
+    if (!user) {
+        return next(new HandleERROR("کاربری با این شماره تلفن همراه یافت نشد", 404))
     }
     const token = jwt.sign({
         id: user._id,
@@ -142,4 +142,14 @@ export const forgetPasseord = catchAsync(async (req, res, next) => {
     })
 
 })
-export const resendCode = catchAsync(async (req, res, next) => { })
+export const resendCode = catchAsync(async (req, res, next) => {
+    const { phoneNumber = null } = req.body
+    if (!phoneNumber) {
+        return next(new HandleERROR("شماره تلفن همراه خود را وارد کنید", 400))
+    }
+    const resultSms = await sendAuthCode(phoneNumber);
+    return res.status(200).json({
+        success: resultSms.success,
+        message: resultSms.success ? "code sent" : resultSms?.message,
+    });
+})
