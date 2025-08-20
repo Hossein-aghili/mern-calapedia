@@ -1,6 +1,7 @@
 import { catchAsync, HandleERROR } from "vanta-api";
 import User from "../Models/user.model";
-import { sendAuthCode } from "../Utils/smsHandler";
+import { sendAuthCode, verifyCode } from "../Utils/smsHandler";
+import jwt from "jsonwebtoken";
 
 export const auth = catchAsync(async (req, res, next) => {
     const { phoneNumber = null, } = req.body
@@ -35,7 +36,74 @@ export const auth = catchAsync(async (req, res, next) => {
         }
     }
 })
-export const checkOtp = catchAsync(async (req, res, next) => { })
-export const checkPassword = catchAsync(async (req, res, next) => { })
+export const checkOtp = catchAsync(async (req, res, next) => { 
+    const {phoneNumber=null,code=null,newAccount='unknown'} = req.body
+    if(!phoneNumber || !code || newAccount==='unknown'){
+        return next(new HandleERROR("اطلاعات وارد شده معتبر نیست",400))
+    }
+    const verifyCode = await verifyCode(phoneNumber,code)
+    if(!verifyCode.success){
+        return next(new HandleERROR("کد وارد شده معتبر نیست",400))
+    }
+    let user
+    if(newAccount==='true'){
+        user = await User.create({phoneNumber})
+    }else{
+        user = await User.findOne({phoneNumber})
+    }
+    if(!user){
+        return next(new HandleERROR("کاربری با این شماره تلفن همراه یافت نشد",404))
+    }
+    const token = jwt.sign({
+        id:user._id,
+        role:user.role,
+        phoneNumber:user.phoneNumber,
+    },process.env.JWT_SECRET)
+    return res.status(200).json({
+        success:true,
+        data:{
+            user:{
+                phoneNumber,
+                _id:user?._id,
+                role:user?.role,
+            },
+            token,
+            message:"ورود با موفقیت انجام شد"
+        }
+    })
+})
+
+export const checkPassword = catchAsync(async (req, res, next) => {
+    const {phoneNumber=null,password=null} = req.body
+    if(!phoneNumber || !password){
+        return next(new HandleERROR("اطلاعات وارد شده معتبر نیست",400))
+    }
+    const user = await User.findOne({phoneNumber})
+    if(!user){
+        return next(new HandleERROR("کاربری با این شماره تلفن همراه یافت نشد",404))
+    }
+    const validPassword = await bcrypt.compare(password,user.password)
+    if(!validPassword){
+        return next(new HandleERROR("رمز عبور وارد شده معتبر نیست",400))
+    }
+    const token = jwt.sign({
+        id:user._id,
+        role:user.role,
+        phoneNumber:user.phoneNumber,
+    },process.env.JWT_SECRET)
+    return res.status(200).json({
+        success:true,
+        data:{
+            user:{
+                phoneNumber,
+                _id:user?._id,
+                role:user?.role,
+            },
+            token,
+            message:"ورود با موفقیت انجام شد"
+        }
+    })
+
+})
 export const forgetPasseord = catchAsync(async (req, res, next) => { })
 export const resendCode = catchAsync(async (req, res, next) => { })
