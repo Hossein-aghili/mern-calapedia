@@ -1,5 +1,5 @@
 import ApiFeatures, { catchAsync, HandleERROR } from "vanta-api";
-import User from "../Models/user.model";
+import User from "../Models/user.model.js";
 export const getAll = catchAsync(async (req, res, next) => {
     const features = new ApiFeatures(User, req.query, req.role)
         .filter()
