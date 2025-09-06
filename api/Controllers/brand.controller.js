@@ -2,8 +2,16 @@ import ApiFeatures, { catchAsync, HandleERROR } from "vanta-api";
 import Brand from "../Models/brand.model.js";
 import Product from "../Models/product.model.js";
 import fs from "fs"
-
 import { __dirname } from './../app.js';
+
+export const create = catchAsync(async (req, res, next) => {
+    const brand = await Brand.create(req.body)
+    return res.status(200).json({
+        success: true,
+        data: brand, 
+        message: 'با موفقیت ساخته شد'
+    })
+})
 export const getAll = catchAsync(async (req, res, next) => {
     const features = new ApiFeatures(Brand, req.query, req.role)
         .filter()
