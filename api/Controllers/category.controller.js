@@ -3,6 +3,15 @@ import Category from "../Models/category.model.js"
 import Product from "../Models/product.model.js"
 import fs from 'fs'
 
+export const create = catchAsync(async(req,res,next)=>{
+    const category = await Category.create(req.body)
+    return res.status(200).json({
+        success:true,
+        data:category,
+        message:'با موفقیت ساخته شد'
+    })
+})
+
 export const getAll = catchAsync(async (req, res, next) => {
     let role = null
     if (req?.headers?.authorization) {
