@@ -2,7 +2,13 @@ import ApiFeatures, { catchAsync, HandleERROR } from "vanta-api";
 import Address from "../Models/address.model.js";
 
 export const create = catchAsync(async (req, res, next) => {
-
+    const {userId=null,...others} = req.body
+    const address = await Address.create({...others,userId})
+    return res.status(201).json({
+        success: true,
+        data: address,
+        message: "با موفقیت ثبت شد"
+    })
 })
 export const getAll = catchAsync(async (req, res, next) => {
     const features = new ApiFeatures(Address, req.query, req.role)
