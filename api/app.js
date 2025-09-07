@@ -15,7 +15,8 @@ import productVariantRouter from "./Routes/productVariant.route.js";
 import sliderRouter from "./Routes/slider.route.js";
 import userRouter from "./Routes/user.route.js";
 import variantRouter from "./Routes/variant.route.js";
-
+import { isLogin } from './Middlewares/isLogin.js';
+import brandRouter from "./Routes/brand.route.js";
 const __filename =fileURLToPath(import.meta.url)
 export const __dirname = path.dirname(__filename)
 
@@ -23,11 +24,11 @@ const app = express()
 app.use(cors())
 app.use(express.json())
 app.use(morgan("dev"))
-// app.use(express.static("Public"))
+app.use(express.static("Public"))
 app.use('/api/auth',authRouter)
-app.use('/api/address',addressRouter)
+app.use('/api/address',isLogin,addressRouter)
 app.use('/api/cart',cartRouter)
-app.use('/api/category',categoryRouter)
+app.use('/api/categories',categoryRouter)
 app.use('/api/comment',commentRouter)
 app.use('/api/discount',discountRouter)
 app.use('/api/order',orderRouter)
@@ -36,5 +37,6 @@ app.use('/api/productVariant',productVariantRouter)
 app.use('/api/slider',sliderRouter)
 app.use('/api/user',userRouter)
 app.use('/api/variant',variantRouter)
+app.use('/api/brand',brandRouter)
 
 export default app
