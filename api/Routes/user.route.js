@@ -1,6 +1,8 @@
 import express from 'express'
 import { getAll, getOne, update } from '../Controllers/user.controller.js'
+import { isLogin } from './../Middlewares/isLogin.js';
+import { isAdmin } from './../Middlewares/isAdmin.js';
 const userRouter = express.Router()
-userRouter.route('/').get(getAll)
-userRouter.route('/:id').get(getOne).patch(update)
+userRouter.route('/').get(isAdmin,getAll)
+userRouter.route('/:id').get(isLogin,getOne).patch(isLogin,update)
 export default userRouter
