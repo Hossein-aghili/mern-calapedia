@@ -11,9 +11,7 @@ const addressSchema =mongoose.Schema({
     receiverphoneNumber:{
         type:String,
         required:[true,"وارد شماره تلفن گیرنده خود را وارد اجباری است"],
-        minlength:[11,"شماره تلفن باید 11 رقم باشد"],
-        maxlength:[11,"شماره تلفن باید 11 رقم باشد"],
-        unique:true,
+        match:[/^(\+98|0)?9\d{9}$/,'phone is not valid']    
     },
     postalCode:{
         type:String,
