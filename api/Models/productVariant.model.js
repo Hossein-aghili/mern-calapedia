@@ -24,7 +24,7 @@ const productVariantSchema = new mongoose.Schema({
         ref: 'Product'
     },
     priceAfterDiscount: {
-        type: number,
+        type: Number,
         required: true
     }
 }, { timestamps: true })
