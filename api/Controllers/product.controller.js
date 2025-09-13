@@ -40,7 +40,7 @@ export const getOne = catchAsync(async (req, res, next) => {
 })
 export const update = catchAsync(async (req, res, next) => {
     const { id } = req.params
-    const product = await Product.findByIdAndUpdate(id, { new: true, runValidators: true })
+    const product = await Product.findByIdAndUpdate(id,req.body, { new: true, runValidators: true })
     if (!product) {
         return next(new HandleERROR('محصول پیدا نشد'), 404)
     }
