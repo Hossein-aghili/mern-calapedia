@@ -1,6 +1,13 @@
 import mongoose from "mongoose";
 const informtionSchema = mongoose.Schema({
-
+    key:{
+        type:String,
+        required:[true,'وارد کردن اطلاعات اجباری است']
+    },
+    value:{
+        type:String,
+        required:[true,'وارد کردن مقدار اطلاعات اجباری است']
+    }
 })
 const productShema = new mongoose.Schema({
     title: {
