@@ -1,6 +1,6 @@
 import ApiFeatures, { catchAsync, HandleERROR } from "vanta-api";
 import Variant from "../Models/variant.model.js";
-import ProductVariant from "../Models/productVariant.model";
+import ProductVariant from "../Models/productVariant.model.js";
 export const create = catchAsync(async (req, res, next) => {
     const variant = await Variant.create(req.body)
     return res.status(201).json({
