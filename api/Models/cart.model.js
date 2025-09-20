@@ -22,7 +22,7 @@ const cartSchema = mongoose.Schema({
         type: [itemSchema],
         default: []
     },
-    totilPrice: {
+    totalPrice: {
         type: Number,
         default: 0
     },
