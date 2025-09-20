@@ -1,14 +1,19 @@
 import Cart from "../Models/cart.model.js";
-import { catchAsync } from 'vanta-api';
+import { catchAsync, HandleERROR } from 'vanta-api';
 import ProductVariant from './../Models/productVariant.model.js';
 
 export const add = catchAsync(async (req, res, next) => {
     const { productVariantId, productId, categoryId } = req.body
     let add = false
     const pr = await ProductVariant.findById(productVariantId)
+    if (!pr) {
+        return next(new HandleERROR('ویژگی محصول پیدا نشد'))
+    }
     const userId = req.userId
     const cart = await Cart.findOne({ userId })
-
+    if (!cart) {
+        return next(new HandleERROR('سبد خرید پیدا نشد', 404))
+    }
     cart.items = cart.items.map((item) => {
         if (item.productVariantId.toString() == productVariantId) {
             item.quantity = item.quantity + 1
@@ -38,6 +43,9 @@ export const remove = catchAsync(async (req, res, next) => {
     const { productVariantId } = req.body
     const userId = req.userId
     const cart = await Cart.findOne({ userId })
+    if (!cart) {
+        return next(new HandleERROR('سبد خرید پیدا نشد', 404))
+    }
     cart.items = cart.items.filter((item) => {
         if (item.productVariantId.toString() == productVariantId) {
             item.quantity = item.quantity - 1
