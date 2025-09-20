@@ -53,7 +53,7 @@ export const changeActivity = catchAsync(async (req, res, next) => {
     })
 })
 export const removeComment = catchAsync(async (req, res, next) => {
-    const { id } = params
+    const { id } = req.params
     const comment = await findByIdAndDelete(id)
     return res.status(200).json({
         success: true,
