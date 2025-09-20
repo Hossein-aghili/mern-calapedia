@@ -8,7 +8,6 @@ import addressRouter from "./Routes/address.route.js";
 import cartRouter from "./Routes/cart.route.js";
 import categoryRouter from "./Routes/category.route.js";
 import commentRouter from "./Routes/comment.route.js";
-import discountRouter from "./Routes/discount.route.js";
 import orderRouter from "./Routes/order.route.js";
 import productRouter from "./Routes/product.route.js";
 import productVariantRouter from "./Routes/productVariant.route.js";
@@ -30,7 +29,6 @@ app.use('/api/address',isLogin,addressRouter)
 app.use('/api/cart',cartRouter)
 app.use('/api/categories',categoryRouter)
 app.use('/api/comment',commentRouter)
-app.use('/api/discount',discountRouter)
 app.use('/api/order',orderRouter)
 app.use('/api/product',productRouter)
 app.use('/api/productVariant',productVariantRouter)
