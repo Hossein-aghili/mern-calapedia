@@ -50,9 +50,16 @@ export const remove = catchAsync(async (req, res, next) => {
     })
     const newCart = await cart.save()
     return res.status(200).json({
-        success:true,
-        data:newCart,
-        message:'با موفقیت حذف شد'
+        success: true,
+        data: newCart,
+        message: 'با موفقیت حذف شد'
     })
 })
-export const getUserCart = catchAsync(async (req, res, next) => { })
+export const getUserCart = catchAsync(async (req, res, next) => {
+    const userId = req.userId
+    const cart = await Cart.findOne({ userId })
+    return res.status(200).json({
+        success: true,
+        data: cart
+    })
+})
