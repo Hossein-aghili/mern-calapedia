@@ -1,8 +1,8 @@
 import ApiFeatures, { catchAsync, HandleERROR } from "vanta-api"
 import Slider from "../Models/slider.model.js"
-import { fs } from 'fs';
+import  fs from 'fs';
 
-export const cerate = catchAsync(async(req,res,next)=>{
+export  const create = catchAsync(async(req,res,next)=>{
     const slider = await Slider.create(req.body)
     return res.status(201).json({
         success: true,
