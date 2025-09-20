@@ -34,5 +34,25 @@ export const add = catchAsync(async (req, res, next) => {
         message: 'با موفقیت اضافه شد'
     })
 })
-export const remove = catchAsync(async (req, res, next) => { })
+export const remove = catchAsync(async (req, res, next) => {
+    const { productVariantId } = req.body
+    const userId = req.userId
+    const cart = await Cart.findOne({ userId })
+    cart.items = cart.items.filter((item) => {
+        if (item.productVariantId.toString() == productVariantId) {
+            item.quantity = item.quantity - 1
+            cart.totalPrice = cart.totalPrice - item.finalPrice
+            if (item.quantity == 0) {
+                return false
+            }
+        }
+        return item
+    })
+    const newCart = await cart.save()
+    return res.status(200).json({
+        success:true,
+        data:newCart,
+        message:'با موفقیت حذف شد'
+    })
+})
 export const getUserCart = catchAsync(async (req, res, next) => { })
