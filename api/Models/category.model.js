@@ -15,8 +15,10 @@ const categorySchema = new mongoose.Schema({
     isActive: {
         type: Boolean,
         default: true
-    }
+    },
 
 },{timestamps:true})
+categorySchema.index({title:1,parentCategory:1},{unique:true})
+
 const Category = mongoose.model("Category",categorySchema)
 export default Category;
